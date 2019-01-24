@@ -1,28 +1,81 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Clipboard from 'clipboard';
+import React, {Component} from 'react';
+import {
+  Button,
+  Col,
+  ControlLabel,
+  FormControl,
+  FormGroup,
+  Grid,
+  HelpBlock,
+  InputGroup,
+  Row,
+} from 'react-bootstrap';
+import {toLanguageKey} from './util/language-key';
 
-class App extends Component {
+export default class App extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this._clipboard = new Clipboard('[data-clipboard-text]');
+    this.handleChange = this.handleChange.bind(this);
+
+    this.state = {
+      languageKey: '',
+      value: '',
+    };
+  }
+
+  componentWillUnmount() {
+    this._clipboard.destroy();
+  }
+
+  handleChange(event) {
+    const {value} = event.target;
+
+    this.setState({
+      languageKey: toLanguageKey(value),
+      value,
+    });
+  }
+
   render() {
+    const {languageKey, value} = this.state;
+
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Grid>
+          <Row>
+            <Col>
+              <form>
+                <FormGroup controlId="formBasicText">
+                  <ControlLabel>{'Language Key Creator'}</ControlLabel>
+
+                  <InputGroup>
+                    <FormControl
+                      placeholder="Enter String"
+                      onChange={this.handleChange}
+                      type="text"
+                      value={value}
+                    />
+
+                    <InputGroup.Button>
+                      <Button data-clipboard-text={`${languageKey}=${value}`}>
+                        {'Copy Pair'}
+                      </Button>
+                    </InputGroup.Button>
+                  </InputGroup>
+
+                  <FormControl.Feedback />
+
+                  <HelpBlock>{languageKey}</HelpBlock>
+                </FormGroup>
+              </form>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
 }
-
-export default App;
