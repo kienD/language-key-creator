@@ -1,7 +1,21 @@
+import capitalize from 'chicago-capitalize';
 import {flow, toLower, trim} from 'lodash/fp';
 
+const TRAILING_PUNCTUATION_REGEX = /([.!?]+$)/gi;
+
 /**
- * Replaces ampersand with "and".
+ * Auto capitalize titles if its not a sentence.
+ */
+export function capitalizeTitle(languageKey) {
+  if (languageKey.match(TRAILING_PUNCTUATION_REGEX)) {
+    return languageKey;
+  }
+
+  return capitalize(languageKey);
+}
+
+/**
+ * Replaces ampersand "&" with "and".
  */
 export function replaceAmpersand(languageKey) {
   return languageKey.replace(/&/gi, 'and');
@@ -32,14 +46,14 @@ export function replaceVariables(languageKey) {
  * Remove the following special characters: ", \, /, :, (, ), %, *
  */
 export function removeSpecialChars(languageKey) {
-  return languageKey.replace(/(["\\/:()%\*])/gi, '');
+  return languageKey.replace(/(["\\/:()%*])/gi, '');
 }
 
 /**
  * Remove trailing punctuation.
  */
 export function removeTrailingPunctuation(languageKey) {
-  return languageKey.replace(/([.!?]+$)/gi, '');
+  return languageKey.replace(TRAILING_PUNCTUATION_REGEX, '');
 }
 
 /**

@@ -1,4 +1,5 @@
 import {
+  capitalizeTitle,
   replaceAmpersand,
   replaceHash,
   replaceSpaces,
@@ -9,6 +10,30 @@ import {
 } from '../language-key';
 
 describe('language-key', () => {
+  describe('capitalizeTitle', () => {
+    it('should capitalize a title', () => {
+      expect(capitalizeTitle('This and that')).toBe('This and That');
+    });
+
+    it('should not capitalize a sentence ending in a period', () => {
+      const sentence = 'This and that.';
+
+      expect(capitalizeTitle(sentence)).toBe(sentence);
+    });
+
+    it('should not capitalize a sentence ending in a question mark', () => {
+      const sentence = 'This and that?';
+
+      expect(capitalizeTitle(sentence)).toBe(sentence);
+    });
+
+    it('should not capitalize a sentence ending in a exclamation mark', () => {
+      const sentence = 'This and that!';
+
+      expect(capitalizeTitle(sentence)).toBe(sentence);
+    });
+  });
+
   describe('replaceAmpersand', () => {
     it.each`
       input              | output
