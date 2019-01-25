@@ -107,14 +107,13 @@ export default class App extends Component {
                     {'Auto Capitalize Titles'}
                   </Checkbox>
 
-                  {!autoTitleCase && (
-                    <Checkbox
-                      inline
-                      onChange={this.handleToggleCase}
-                      checked={titleCase}>
-                      {'Title Case'}
-                    </Checkbox>
-                  )}
+                  <Checkbox
+                    disabled={autoTitleCase}
+                    inline
+                    onChange={this.handleToggleCase}
+                    checked={titleCase}>
+                    {'Title Case'}
+                  </Checkbox>
 
                   <FormControl.Feedback />
 
