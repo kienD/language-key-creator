@@ -1,4 +1,4 @@
-import capitalize from 'chicago-capitalize';
+import title from 'title';
 import {flow, toLower, trim} from 'lodash/fp';
 
 const TRAILING_PUNCTUATION_REGEX = /([.!?]+$)/gi;
@@ -11,7 +11,7 @@ export function capitalizeTitle(languageKey) {
     return languageKey;
   }
 
-  return capitalize(languageKey);
+  return title(languageKey);
 }
 
 /**

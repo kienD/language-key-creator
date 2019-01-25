@@ -1,7 +1,7 @@
 import './App.css';
-import capitalize from 'chicago-capitalize';
 import Clipboard from 'clipboard';
 import React, {Component} from 'react';
+import title from 'title';
 import {
   Button,
   Checkbox,
@@ -71,7 +71,7 @@ export default class App extends Component {
     if (autoTitleCase) {
       retVal = capitalizeTitle(retVal);
     } else if (titleCase) {
-      retVal = capitalize(value);
+      retVal = title(value);
     }
 
     const copyData = `${languageKey}=${retVal}`;
