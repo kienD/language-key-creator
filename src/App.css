@@ -2,10 +2,24 @@
   text-align: center;
 }
 
-form {
-  margin-top: 100px;
-}
-
 .help-block {
   text-align: left;
+}
+
+.language-key-full {
+  text-align: left;
+}
+
+.form-control {
+  min-height: 400px;
+  resize: none;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.output {
+  min-height: 400px;
+  word-wrap: break-word;
 }

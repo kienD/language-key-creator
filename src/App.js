@@ -4,17 +4,20 @@ import React, {Component} from 'react';
 import title from 'title';
 import {
   Button,
-  Checkbox,
+  ButtonToolbar,
   Col,
   ControlLabel,
   FormControl,
   FormGroup,
   Grid,
-  HelpBlock,
-  InputGroup,
+  PageHeader,
+  Panel,
   Row,
+  ToggleButton,
+  ToggleButtonGroup,
 } from 'react-bootstrap';
-import {capitalizeTitle, toLanguageKey} from './util/language-key';
+import {capitalizeTitle, splitKeys, toLanguageKey} from './util/language-key';
+import {compact} from 'lodash';
 
 export default class App extends Component {
   constructor(props, context) {
@@ -22,12 +25,16 @@ export default class App extends Component {
 
     this._clipboard = new Clipboard('[data-clipboard-text]');
 
+    this.handleCapitalizationChange = this.handleCapitalizationChange.bind(
+      this,
+    );
     this.handleChange = this.handleChange.bind(this);
     this.handleToggleAuto = this.handleToggleAuto.bind(this);
     this.handleToggleCase = this.handleToggleCase.bind(this);
 
     this.state = {
       autoTitleCase: true,
+      capitalizationRule: 'titles',
       languageKey: '',
       titleCase: false,
       value: '',
@@ -63,63 +70,105 @@ export default class App extends Component {
     });
   }
 
+  handleCapitalizationChange(capitalizationRule) {
+    this.setState({
+      capitalizationRule,
+    });
+  }
+
+  createKeys() {
+    const {capitalizationRule, value} = this.state;
+
+    const keys = splitKeys(value);
+
+    return compact(keys).map(key => {
+      let retVal = key;
+
+      if (capitalizationRule === 'titles') {
+        retVal = capitalizeTitle(retVal);
+      } else if (capitalizationRule === 'all') {
+        retVal = title(retVal);
+      }
+
+      return `${toLanguageKey(key)}=${retVal}`;
+    });
+  }
+
   render() {
-    const {autoTitleCase, languageKey, titleCase, value} = this.state;
+    const {value} = this.state;
 
-    let retVal = value;
-
-    if (autoTitleCase) {
-      retVal = capitalizeTitle(retVal);
-    } else if (titleCase) {
-      retVal = title(value);
-    }
-
-    const copyData = `${languageKey}=${retVal}`;
+    const copyData = this.createKeys();
 
     return (
       <div className="App">
         <Grid>
           <Row>
             <Col>
-              <form>
-                <FormGroup controlId="formBasicText">
-                  <ControlLabel>{'Language Key Creator'}</ControlLabel>
+              <PageHeader>{'Language Key Creator'}</PageHeader>
+            </Col>
+          </Row>
 
-                  <InputGroup>
-                    <FormControl
-                      placeholder="Enter String"
-                      onChange={this.handleChange}
-                      type="text"
-                      value={value}
-                    />
+          <Row>
+            <Col md={6}>
+              <Panel>
+                <Panel.Body>
+                  <form>
+                    <FormGroup controlId="formBasicText">
+                      <ControlLabel>{'Input'}</ControlLabel>
 
-                    <InputGroup.Button>
-                      <Button data-clipboard-text={copyData}>
-                        {'Copy Pair'}
-                      </Button>
-                    </InputGroup.Button>
-                  </InputGroup>
+                      <ButtonToolbar>
+                        <ToggleButtonGroup
+                          defaultValue="titles"
+                          name="test"
+                          onChange={this.handleCapitalizationChange}>
+                          <ToggleButton value="all">
+                            {'Capitalize All'}
+                          </ToggleButton>
+                          <ToggleButton value="titles">
+                            {'Capitalize Titles'}
+                          </ToggleButton>
+                          <ToggleButton value="none">
+                            {'Capitalize None'}
+                          </ToggleButton>
+                        </ToggleButtonGroup>
+                      </ButtonToolbar>
 
-                  <Checkbox
-                    inline
-                    onChange={this.handleToggleAuto}
-                    checked={autoTitleCase}>
-                    {'Auto Capitalize Titles'}
-                  </Checkbox>
+                      <FormControl
+                        componentClass="textarea"
+                        placeholder="Enter String"
+                        onChange={this.handleChange}
+                        type="textarea"
+                        value={value}
+                      />
+                    </FormGroup>
+                  </form>
+                </Panel.Body>
+              </Panel>
+            </Col>
 
-                  <Checkbox
-                    disabled={autoTitleCase}
-                    inline
-                    onChange={this.handleToggleCase}
-                    checked={titleCase}>
-                    {'Title Case'}
-                  </Checkbox>
+            <Col md={6}>
+              <Panel bsSize="large">
+                <Panel.Body>
+                  <ControlLabel>{'Output'}</ControlLabel>
 
-                  <FormControl.Feedback />
+                  <ButtonToolbar>
+                    <Button data-clipboard-text={copyData.join('\n')}>
+                      {'Copy Pair'}
+                    </Button>
+                  </ButtonToolbar>
 
-                  {value && <HelpBlock>{copyData}</HelpBlock>}
-                </FormGroup>
-              </form>
+                  <div className="output">
+                    {value &&
+                      copyData.map((val, i) => {
+                        return (
+                          <div className="language-key-full" key={i}>
+                            {val}
+                          </div>
+                        );
+                      })}
+                  </div>
+                </Panel.Body>
+              </Panel>
             </Col>
           </Row>
         </Grid>

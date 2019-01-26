@@ -57,6 +57,15 @@ export function removeTrailingPunctuation(languageKey) {
 }
 
 /**
+ * Creates an array from a string separated by new lines.
+ * @param {string} languageKeys - A string of keys separated by new lines.
+ * @returns {Array}
+ */
+export function splitKeys(languageKeys) {
+  return languageKeys.split(/\n/gi);
+}
+
+/**
  * Format a String to a language key.
  */
 export function toLanguageKey(languageKey) {
