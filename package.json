@@ -1,7 +1,7 @@
 {
   "name": "language-key-creator",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "clipboard": "^2.0.4",
     "jest": "^23.6.0",
