@@ -46,7 +46,7 @@ export function replaceVariables(languageKey) {
  * Remove the following special characters: ", \, /, :, (, ), %, *
  */
 export function removeSpecialChars(languageKey) {
-  return languageKey.replace(/(["\\/:()%*])/gi, '');
+  return languageKey.replace(/(["'\\/:()%*])/gi, '');
 }
 
 /**
